@@ -31,7 +31,25 @@ const run = async () => {
       res.send(records);
     });
 
-    app.delete('record/:id', async (req, res) => {
+    app.get('/record/:id', async (req, res) => {
+      const id = req.params;
+      const query = { _id: ObjectId(id) };
+      const result = await recordCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.put('/record/:id', async (req, res) => {
+      const id = req.params;
+      const query = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: req.body,
+      };
+      const result = await recordCollection.updateOne(query, updateDoc, options);
+      res.send(result);
+    });
+
+    app.delete('/record/:id', async (req, res) => {
       const id = req.params;
       const query = { _id: ObjectId(id) };
       const result = await recordCollection.deleteOne(query);
@@ -42,6 +60,10 @@ const run = async () => {
 };
 
 run().catch(console.dir);
+
+app.get('/', (req, res) => {
+  res.send('Server running');
+});
 
 app.listen(port, () => {
   console.log('server is running', port);
