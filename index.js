@@ -45,7 +45,11 @@ const run = async () => {
       const updateDoc = {
         $set: req.body,
       };
-      const result = await recordCollection.updateOne(query, updateDoc, options);
+      const result = await recordCollection.updateOne(
+        query,
+        updateDoc,
+        options
+      );
       res.send(result);
     });
 
@@ -65,6 +69,4 @@ app.get('/', (req, res) => {
   res.send('Server running');
 });
 
-app.listen(port, () => {
-  console.log('server is running', port);
-});
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
