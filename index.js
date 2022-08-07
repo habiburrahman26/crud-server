@@ -18,46 +18,11 @@ const client = new MongoClient(uri, {
 const run = async () => {
   try {
     await client.connect();
-    const recordCollection = client.db('record-crud').collection('records');
-
-    app.post('/record', async (req, res) => {
-      const record = req.body;
-      const result = await recordCollection.insertOne(record);
-      res.send(result);
-    });
+    const detectCollection = client.db('railway').collection('detect');
 
     app.get('/record', async (req, res) => {
-      const records = await recordCollection.find().toArray();
+      const records = await detectCollection.find().toArray();
       res.send(records);
-    });
-
-    app.get('/record/:id', async (req, res) => {
-      const id = req.params;
-      const query = { _id: ObjectId(id) };
-      const result = await recordCollection.findOne(query);
-      res.send(result);
-    });
-
-    app.put('/record/:id', async (req, res) => {
-      const id = req.params;
-      const query = { _id: ObjectId(id) };
-      const options = { upsert: true };
-      const updateDoc = {
-        $set: req.body,
-      };
-      const result = await recordCollection.updateOne(
-        query,
-        updateDoc,
-        options
-      );
-      res.send(result);
-    });
-
-    app.delete('/record/:id', async (req, res) => {
-      const id = req.params;
-      const query = { _id: ObjectId(id) };
-      const result = await recordCollection.deleteOne(query);
-      res.send(result);
     });
   } finally {
   }
